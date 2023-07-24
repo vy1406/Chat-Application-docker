@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { getUsers } from "../store/actions/index";
 
-const ChatBar = ({ socket }) => {
-  const [users, setUsers] = useState([]);
-
+const ChatBar = ({ users, user, getUsers }) => {
   useEffect(() => {
-    socket.on("newUserResponse", (data) => setUsers(data));
-  }, [socket, users]);
+    getUsers();
+  }, [getUsers, users]);
 
+  const filteredUsers = users.filter((user) => user.status === true);
   return (
     <div className="chat__sidebar">
       <h2>Open Chat</h2>
       <div>
         <h4 className="chat__header">ACTIVE USERS</h4>
         <div className="chat__users">
-          {users &&
-            users.map((user) => <p key={user.socketID}>{user.userName}</p>)}
+          {filteredUsers &&
+            filteredUsers.length > 0 &&
+            filteredUsers.map((data) => (
+              <p key={data.username}>
+                {" "}
+                {data.username === user.username
+                  ? `${data.username} (You)`
+                  : data.username}{" "}
+              </p>
+            ))}
         </div>
       </div>
     </div>
@@ -24,11 +32,18 @@ const ChatBar = ({ socket }) => {
 
 const mapStateToProps = (state) => {
   const {
-    chat: { socket },
+    user: { users, user },
   } = state;
   return {
-    socket,
+    users,
+    user,
   };
 };
 
-export default connect(mapStateToProps)(ChatBar);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getUsers: () => dispatch(getUsers()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatBar);

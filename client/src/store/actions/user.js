@@ -20,9 +20,9 @@ export const getUsers = () => {
     customAxios
       .get("/getusers")
       .then((response) => {
-        dispatch(setUsers(response.data.users));
+        dispatch(setUsers(response.data));
       })
-      .catch((error) => console.log("הוספת משתמש נכשלה", error));
+      .catch((error) => console.log("הבאת משתמשים נכשלה", error));
   };
 };
 
@@ -39,7 +39,8 @@ export const signIn = (data) => {
     customAxios
       .post("/signin", { username })
       .then((response) => {
-        dispatch(setUser(response.data.user));
+        dispatch(setUser(response.data));
+        dispatch(getUsers());
       })
       .then(() => goTo())
       .catch((error) => console.log("כניסת משתמש נכשלה", error));
@@ -47,8 +48,31 @@ export const signIn = (data) => {
 };
 
 const setUser = (user) => {
+console.log('user :', user);
   return {
     type: actionTypes.SET_USER,
     user,
   };
 };
+
+export const signOut = username => {
+console.log('username act:', username);
+  return (dispatch) => {
+    customAxios
+      .post("/signout", { username })
+      .then((response) => {
+        //localStorage.clear()
+        //dispatch(setSignOut());
+        dispatch(getUsers());
+      })
+      .catch((error) =>{
+        localStorage.clear()
+       // dispatch(setSignOut());
+      })
+  };
+};
+
+// const setSignOut = () => {
+//   return { type: actionTypes.SIGN_OUT }
+// }
+

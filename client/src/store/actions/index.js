@@ -1,2 +1,2 @@
-export * from './socket';
+export * from './chat';
 export * from './user';

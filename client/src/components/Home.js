@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { getUsers, signIn } from '../store/actions/index';
 
-const Home = ({ socket, getUsers, signIn }) => {
+const Home = ({ getUsers, signIn }) => {
   const navigate = useNavigate();
   const [username, setUserName] = useState("");
   const [roomName, setRoomName] = useState("");
@@ -14,13 +14,14 @@ const Home = ({ socket, getUsers, signIn }) => {
     localStorage.setItem("username", username);
     localStorage.setItem("roomName", roomName);
     //sends the username and socket ID to the Node.js server
-    socket.emit("newUser", { username, roomName, socketID: socket.id });
+    //socket.emit("newUser", { username, roomName, socketID: socket.id });
     await getUsers()
   };
 
 
 
-  const handleButtonClick = () => {
+  const handleSignUpClick = () => {
+  console.log('handleSignUpClick :');
     // Navigate to the specified page when the button is clicked
     navigate('/signup');
   };
@@ -49,7 +50,7 @@ const Home = ({ socket, getUsers, signIn }) => {
         onChange={(e) => setRoomName(e.target.value)}
       />
       <button type="submit" className="home__cta">SIGN IN</button>
-      <button onClick={handleButtonClick} className="home__signup">SIGN UP</button>
+      <button onClick={handleSignUpClick} className="home__signup">SIGN UP</button>
     </form>
     
   );
@@ -60,7 +61,7 @@ const mapStateToProps = (state) => {
     chat: { socket },
   } = state;
   return {
-    socket,
+    socket
   };
 };
 
