@@ -1,28 +1,25 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
-import { getUsers, signIn } from '../store/actions/index';
+import {  signIn, getMessages, getUsers } from '../store/actions/index';
 
-const Home = ({ getUsers, signIn }) => {
+const Home = ({ signIn, socket, getMessages , getUsers}) => {
   const navigate = useNavigate();
   const [username, setUserName] = useState("");
   const [roomName, setRoomName] = useState("");
 
+
   const handleSubmit = async(e) => {
     e.preventDefault();
     await signIn({ username, roomName, goTo: () => navigate("/chat")})
+    await getMessages();
+    //await getUsers();
     localStorage.setItem("username", username);
     localStorage.setItem("roomName", roomName);
-    //sends the username and socket ID to the Node.js server
-    //socket.emit("newUser", { username, roomName, socketID: socket.id });
-    await getUsers()
+    socket.emit('newUser', { username, socketID: socket.id });
   };
 
-
-
   const handleSignUpClick = () => {
-  console.log('handleSignUpClick :');
-    // Navigate to the specified page when the button is clicked
     navigate('/signup');
   };
 
@@ -68,6 +65,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     signIn: (data) => dispatch(signIn(data)),
+    getMessages: () => dispatch(getMessages()),
     getUsers: () => dispatch(getUsers()),
   };
 };

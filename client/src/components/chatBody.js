@@ -1,16 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
-import { signOut } from "../store/actions/index";
+import { signOut, getUsers } from "../store/actions/index";
 
-const ChatBody = ({ messages, lastMessageRef, typingStatus, signOut, user }) => {
+const ChatBody = ({ messages, lastMessageRef, typingStatus, signOut, user, getUsers }) => {
 
   const navigate = useNavigate();
 
   const handleLeaveChat = async() => {
    await signOut(user.username);
+   await getUsers();
+   localStorage.removeItem('username');
+   localStorage.removeItem('roomName');
     navigate("/");
-    //window.location.reload();
+    window.location.reload();
   };
 
   return (
@@ -21,9 +24,8 @@ const ChatBody = ({ messages, lastMessageRef, typingStatus, signOut, user }) => 
           LEAVE CHAT
         </button>
       </header>
-
       <div className="message__container">
-        {messages.map((message) =>
+        {messages && messages.filter((data) => data.room === localStorage.getItem('roomName')).map((message) =>
           message.name === localStorage.getItem("username") ? (
             <div className="message__chats" key={message.id}>
               <p className="sender__name">You</p>
@@ -53,16 +55,19 @@ const ChatBody = ({ messages, lastMessageRef, typingStatus, signOut, user }) => 
 
 const mapStateToProps = (state) => {
   const {
-    user: { user }
+    user: { user },
+    chat:{messages}
   } = state;
   return {
-    user
+    user,
+    messages
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     signOut: (username) => dispatch(signOut(username)),
+    getUsers: (username) => dispatch(getUsers(username)),
   };
 };
 

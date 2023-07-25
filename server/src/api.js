@@ -7,7 +7,6 @@ const router = express.Router();
 
 router.post("/adduser", async (req, res) => {
   try {
-    console.log("req.body :", req.body);
     const newUser = await User.create(req.body);
     res.json(newUser);
   } catch (err) {
@@ -18,7 +17,7 @@ router.post("/adduser", async (req, res) => {
 router.get("/getusers", async (req, res) => {
   try {
     // const users = await User.find({status:true});
-    const users = await User.find();
+    const users = await User.find({status:true});
     res.json(users);
   } catch (err) {
     res.status(500).json({ error: `הבאת משתמשים נכשלה, ${err}` });
@@ -42,7 +41,8 @@ router.post("/signout", async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
       { username: req.body.username },
-      { status: false }
+      { status: false },
+      { new: true }
     );
     res.status(204).json({ message: "המשתמש נותק" });
   } catch (err) {
@@ -50,13 +50,25 @@ router.post("/signout", async (req, res) => {
   }
 });
 
-// Create a new message
-router.post("/messages", async (req, res) => {
+router.post("/addmessage", async (req, res) => {
   try {
-    const newMessage = await Message.create(req.body);
+    console.log('req.body :', req.body);
+   // const newMessage = await Message.create(req.body);
+   const newMessage = new Message(req.body);
+   await newMessage.save();
+    console.log('newMessage :', newMessage);
     res.json(newMessage);
   } catch (err) {
-    res.status(500).json({ error: "Error creating message" });
+    res.status(500).json({ error: `Error creating message, ${err}` });
+  }
+});
+
+router.get("/getmessages", async (req, res) => {
+  try {
+    const messages = await Message.find();
+    res.json(messages);
+  } catch (err) {
+    res.status(500).json({ error: `הבאת הודעות נכשלה, ${err}` });
   }
 });
 

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-
-const ChatFooter = ({ socket }) => {
+import {addMessage} from "../store/actions/index"
+ 
+const ChatFooter = ({ socket, addMessage }) => {
   const [message, setMessage] = useState("");
 
   const handleTyping = () =>
@@ -21,6 +22,14 @@ const ChatFooter = ({ socket }) => {
         name: localStorage.getItem("username"),
         id: `${socket.id}${Math.random()}`,
         socketID: socket.id,
+        room:localStorage.getItem("roomName")
+      });
+      addMessage({
+        text: message,
+        name: localStorage.getItem("username"),
+        id: `${socket.id}${Math.random()}`,
+        socketID: socket.id,
+        room:localStorage.getItem("roomName")
       });
     }
     setMessage("");
@@ -52,6 +61,12 @@ const mapStateToProps = (state) => {
     socket,
   };
 };
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addMessage: (data) => dispatch(addMessage(data))
+  };
+};
 
 
-export default connect(mapStateToProps)(ChatFooter);
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatFooter);

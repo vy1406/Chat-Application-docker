@@ -7,7 +7,7 @@ export const addUser = (data) => {
     customAxios
       .post("/adduser", { firstName, lastName, email, username, age })
       .then((response) => {
-        dispatch(getUsers());
+       // dispatch(getUsers());
         console.log("משתמש הוסף בהצלחה");
       })
       .then(() => goTo())
@@ -26,7 +26,8 @@ export const getUsers = () => {
   };
 };
 
-const setUsers = (users) => {
+export const setUsers = (users) => {
+console.log('users in action :', users);
   return {
     type: actionTypes.SET_USERS,
     users,
@@ -35,15 +36,15 @@ const setUsers = (users) => {
 
 export const signIn = (data) => {
   const { username, goTo } = data;
-  return (dispatch) => {
-    customAxios
-      .post("/signin", { username })
-      .then((response) => {
-        dispatch(setUser(response.data));
-        dispatch(getUsers());
-      })
-      .then(() => goTo())
-      .catch((error) => console.log("כניסת משתמש נכשלה", error));
+  return async (dispatch) => {
+    try{
+      const response =  await customAxios.post("/signin", { username })
+      await dispatch(setUser(response.data));
+      //await dispatch(getUsers());
+      await goTo();
+    } catch (error) {
+      console.log("כניסת משתמש נכשלה", error);
+    } 
   };
 };
 
@@ -56,17 +57,18 @@ console.log('user :', user);
 };
 
 export const signOut = username => {
-console.log('username act:', username);
-  return (dispatch) => {
+console.log('username action:', username);
+  return async (dispatch) => {
     customAxios
       .post("/signout", { username })
       .then((response) => {
         //localStorage.clear()
         //dispatch(setSignOut());
-        dispatch(getUsers());
+       // dispatch(getUsers());
       })
       .catch((error) =>{
-        localStorage.clear()
+      console.log('error :', error);
+       // localStorage.clear()
        // dispatch(setSignOut());
       })
   };
@@ -75,4 +77,5 @@ console.log('username act:', username);
 // const setSignOut = () => {
 //   return { type: actionTypes.SIGN_OUT }
 // }
+
 

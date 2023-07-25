@@ -32,11 +32,9 @@ function App({ users, user }) {
 
 const mapStateToProps = (state) => {
   const {
-    chat: { socket },
     user: { users, user },
   } = state;
   return {
-    socket,
     users,
     user
   };
