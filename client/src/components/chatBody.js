@@ -2,13 +2,11 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { signOut, getUsers } from "../store/actions/index";
-import "./ChatBubble.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckDouble } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 
-// Add the solid icons to the library
 library.add(fas);
 
 const ChatBody = ({
@@ -24,7 +22,7 @@ const ChatBody = ({
     await signOut(user.username);
     await getUsers();
     localStorage.removeItem("username");
-    localStorage.removeItem("roomName");
+    localStorage.removeItem("room");
     navigate("/");
     window.location.reload();
   };
@@ -32,15 +30,16 @@ const ChatBody = ({
   return (
     <>
       <header className="chat__mainHeader">
-        <p>{`Connected in room ${localStorage.getItem("roomName")}`}</p>
+        <p>{`Connected in room ${localStorage.getItem("room")}`}</p>
         <button className="leaveChat__btn" onClick={handleLeaveChat}>
           LEAVE CHAT
         </button>
       </header>
       <div className="message__container">
         {messages &&
+          messages.length > 0 &&
           messages
-            .filter((data) => data.room === localStorage.getItem("roomName"))
+            .filter((data) => data.room === localStorage.getItem("room"))
             .map((message) =>
               message.name === localStorage.getItem("username") ? (
                 <div className="message__chats" key={message.id}>
@@ -49,7 +48,7 @@ const ChatBody = ({
                     <p>{message.text}</p>
                     <div
                       className={
-                        message.status
+                        message.status === true
                           ? "chat-bubble read"
                           : "chat-bubble not-read"
                       }

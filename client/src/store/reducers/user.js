@@ -19,9 +19,6 @@ const userReducer = (state = initialState, action) => {
         ...state,
         user: action.user,
       };
-    // case actionTypes.SIGN_OUT:
-    //   localStorage.clear();
-    //   return { ...initialState };
     default:
       return state;
   }

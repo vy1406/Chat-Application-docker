@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import {addMessage} from "../store/actions/index"
- 
+import { addMessage } from "../store/actions/index";
+// import { toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
+
 const ChatFooter = ({ socket, addMessage }) => {
   const [message, setMessage] = useState("");
 
@@ -16,22 +18,25 @@ const ChatFooter = ({ socket, addMessage }) => {
 
   const handleSendMessage = (e) => {
     e.preventDefault();
+   // toast.success('הודעה נשלחה בהצלחה!', {
+     // position: toast.POSITION.TOP_RIGHT,
+    //});
     if (message.trim() && localStorage.getItem("username")) {
       socket.emit("message", {
         text: message,
         name: localStorage.getItem("username"),
         id: `${socket.id}${Math.random()}`,
         socketID: socket.id,
-        room:localStorage.getItem("roomName"),
-        status:false
+        room: localStorage.getItem("room"),
+        status: false,
       });
       addMessage({
         text: message,
         name: localStorage.getItem("username"),
         id: `${socket.id}${Math.random()}`,
         socketID: socket.id,
-        room:localStorage.getItem("roomName"),
-        status:false
+        room: localStorage.getItem("room"),
+        status: false,
       });
     }
     setMessage("");
@@ -46,7 +51,6 @@ const ChatFooter = ({ socket, addMessage }) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleTyping}
-          //onKeyUp={handleEndOfTyping}
           onMouseOut={handleEndOfTyping}
         />
         <button className="sendBtn">SEND</button>
@@ -65,10 +69,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    addMessage: (data) => dispatch(addMessage(data))
+    addMessage: (data) => dispatch(addMessage(data)),
   };
 };
-
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatFooter);

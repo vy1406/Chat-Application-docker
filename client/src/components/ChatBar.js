@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { setUsers, getUsers } from "../store/actions";
 
 const ChatBar = ({ users, user, socket, setUsers, getUsers }) => {
+  useEffect(() => {
+    socket.on("newUserResponse", (data) => setUsers(data));
+  }, [socket, users, setUsers]);
 
-
- useEffect(() => {
-  socket.on('newUserResponse', (data) => setUsers(data));
-}, [socket, users, setUsers]);
-
-useEffect(() => {
-  getUsers()
-}, [getUsers]);
+  useEffect(() => {
+    getUsers();
+  }, [getUsers]);
 
   return (
     <div className="chat__sidebar">
@@ -38,12 +36,12 @@ useEffect(() => {
 const mapStateToProps = (state) => {
   const {
     user: { users, user },
-    chat:{socket}
+    chat: { socket },
   } = state;
   return {
     users,
     user,
-    socket
+    socket,
   };
 };
 
@@ -51,7 +49,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setUsers: (data) => dispatch(setUsers(data)),
     getUsers: (data) => dispatch(getUsers(data)),
-    
   };
 };
 

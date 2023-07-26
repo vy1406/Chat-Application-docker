@@ -6,8 +6,7 @@ import { setMessages, getUsers } from "../store/actions/index";
 
 import { connect } from "react-redux";
 
-const ChatPage = ({ socket, messages , setMessages, getUsers}) => {
-  //const [messages, setMessages] = useState([]);
+const ChatPage = ({ socket, messages, setMessages }) => {
   const [typingStatus, setTypingStatus] = useState("");
   const lastMessageRef = useRef(null);
 
@@ -16,7 +15,7 @@ const ChatPage = ({ socket, messages , setMessages, getUsers}) => {
   }, [socket, messages, setMessages]);
 
   useEffect(() => {
-    // 👇️ scroll to bottom every time messages change
+    // scroll to bottom every time messages change
     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
@@ -25,21 +24,18 @@ const ChatPage = ({ socket, messages , setMessages, getUsers}) => {
   }, [socket]);
 
   useEffect(() => {
-    socket.on("endOfTypingResponse", (data) => setTypingStatus(''));
+    socket.on("endOfTypingResponse", (data) => setTypingStatus(""));
   }, [socket]);
 
   useEffect(() => {
-   getUsers()
- }, [getUsers]);
+    socket.on("updatedMessageResponse", (data) => setMessages(data));
+  }, [socket, messages, setMessages]);
 
   return (
     <div className="chat">
       <ChatBar />
       <div className="chat__main">
-        <ChatBody
-          typingStatus={typingStatus}
-          lastMessageRef={lastMessageRef}
-        />
+        <ChatBody typingStatus={typingStatus} lastMessageRef={lastMessageRef} />
         <ChatFooter />
       </div>
     </div>
@@ -49,12 +45,12 @@ const ChatPage = ({ socket, messages , setMessages, getUsers}) => {
 const mapStateToProps = (state) => {
   const {
     chat: { socket, messages },
-    user:{users}
+    user: { users },
   } = state;
   return {
     socket,
     messages,
-    users
+    users,
   };
 };
 

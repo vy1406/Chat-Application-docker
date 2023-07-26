@@ -1,26 +1,25 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
-import {  signIn, getMessages, getUsers } from '../store/actions/index';
+import { signIn, getUsers } from "../store/actions/index";
 
-const Home = ({ signIn, socket, getMessages , getUsers}) => {
+
+const Home = ({ signIn, socket }) => {
   const navigate = useNavigate();
   const [username, setUserName] = useState("");
-  const [roomName, setRoomName] = useState("");
+  const [room, setRoom] = useState("");
 
-
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    await signIn({ username, roomName, goTo: () => navigate("/chat")})
-    await getMessages();
-    //await getUsers();
     localStorage.setItem("username", username);
-    localStorage.setItem("roomName", roomName);
-    socket.emit('newUser', { username, socketID: socket.id });
+    localStorage.setItem("room", room);
+    await signIn({ username, room, goTo: () => navigate("/chat") });
+    socket.emit("newUser", { username, room, socketID: socket.id });
+    socket.emit("updatedMessage", room);
   };
 
   const handleSignUpClick = () => {
-    navigate('/signup');
+    navigate("/signup");
   };
 
   return (
@@ -36,20 +35,23 @@ const Home = ({ signIn, socket, getMessages , getUsers}) => {
         value={username}
         onChange={(e) => setUserName(e.target.value)}
       />
-       <label htmlFor="roomname">Room Name</label>
+      <label htmlFor="room">Room Name</label>
       <input
         type="text"
         minLength={1}
-        name="roomname"
-        id="roomname"
+        name="room"
+        id="room"
         className="input"
-        value={roomName}
-        onChange={(e) => setRoomName(e.target.value)}
+        value={room}
+        onChange={(e) => setRoom(e.target.value)}
       />
-      <button type="submit" className="home__cta">SIGN IN</button>
-      <button onClick={handleSignUpClick} className="home__signup">SIGN UP</button>
+      <button type="submit" className="home__cta">
+        SIGN IN
+      </button>
+      <button onClick={handleSignUpClick} className="home__signup">
+        SIGN UP
+      </button>
     </form>
-    
   );
 };
 
@@ -58,14 +60,13 @@ const mapStateToProps = (state) => {
     chat: { socket },
   } = state;
   return {
-    socket
+    socket,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     signIn: (data) => dispatch(signIn(data)),
-    getMessages: () => dispatch(getMessages()),
     getUsers: () => dispatch(getUsers()),
   };
 };
