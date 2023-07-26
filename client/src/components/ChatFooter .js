@@ -22,14 +22,16 @@ const ChatFooter = ({ socket, addMessage }) => {
         name: localStorage.getItem("username"),
         id: `${socket.id}${Math.random()}`,
         socketID: socket.id,
-        room:localStorage.getItem("roomName")
+        room:localStorage.getItem("roomName"),
+        status:false
       });
       addMessage({
         text: message,
         name: localStorage.getItem("username"),
         id: `${socket.id}${Math.random()}`,
         socketID: socket.id,
-        room:localStorage.getItem("roomName")
+        room:localStorage.getItem("roomName"),
+        status:false
       });
     }
     setMessage("");

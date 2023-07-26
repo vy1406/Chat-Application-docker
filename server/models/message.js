@@ -8,6 +8,7 @@ const messageSchema = new mongoose.Schema(
     //receiver: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     room: { type: String, required: true },
     socketID: { type: String, required: true },
+    status: { type: Boolean,  default:false },
   },
   {
     toJSON: {

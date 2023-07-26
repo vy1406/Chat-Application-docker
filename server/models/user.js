@@ -6,7 +6,8 @@ const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true, unique: false },
   lastName: { type: String, required: true, unique: false },
   age: { type: Number, required: false },
-  status: { type: Boolean, required: false }
+  status: { type: Boolean, required: false },
+  room: { type: String, required: true },
 },{toJSON: {
   transform(doc, ret) {
     ret.id = ret._id;

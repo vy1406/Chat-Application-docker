@@ -2,16 +2,29 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { signOut, getUsers } from "../store/actions/index";
+import "./ChatBubble.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckDouble } from "@fortawesome/free-solid-svg-icons";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
 
-const ChatBody = ({ messages, lastMessageRef, typingStatus, signOut, user, getUsers }) => {
+// Add the solid icons to the library
+library.add(fas);
 
+const ChatBody = ({
+  messages,
+  lastMessageRef,
+  typingStatus,
+  signOut,
+  user,
+  getUsers,
+}) => {
   const navigate = useNavigate();
-
-  const handleLeaveChat = async() => {
-   await signOut(user.username);
-   await getUsers();
-   localStorage.removeItem('username');
-   localStorage.removeItem('roomName');
+  const handleLeaveChat = async () => {
+    await signOut(user.username);
+    await getUsers();
+    localStorage.removeItem("username");
+    localStorage.removeItem("roomName");
     navigate("/");
     window.location.reload();
   };
@@ -25,23 +38,35 @@ const ChatBody = ({ messages, lastMessageRef, typingStatus, signOut, user, getUs
         </button>
       </header>
       <div className="message__container">
-        {messages && messages.filter((data) => data.room === localStorage.getItem('roomName')).map((message) =>
-          message.name === localStorage.getItem("username") ? (
-            <div className="message__chats" key={message.id}>
-              <p className="sender__name">You</p>
-              <div className="message__sender">
-                <p>{message.text}</p>
-              </div>
-            </div>
-          ) : (
-            <div className="message__chats" key={message.id}>
-              <p>{message.name}</p>
-              <div className="message__recipient">
-                <p>{message.text}</p>
-              </div>
-            </div>
-          )
-        )}
+        {messages &&
+          messages
+            .filter((data) => data.room === localStorage.getItem("roomName"))
+            .map((message) =>
+              message.name === localStorage.getItem("username") ? (
+                <div className="message__chats" key={message.id}>
+                  <p className="sender__name">You</p>
+                  <div className="message__sender">
+                    <p>{message.text}</p>
+                    <div
+                      className={
+                        message.status
+                          ? "chat-bubble read"
+                          : "chat-bubble not-read"
+                      }
+                    >
+                      <FontAwesomeIcon icon={faCheckDouble} />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="message__chats" key={message.id}>
+                  <p>{message.name}</p>
+                  <div className="message__recipient">
+                    <p>{message.text}</p>
+                  </div>
+                </div>
+              )
+            )}
 
         <div className="message__status">
           <p>{typingStatus}</p>
@@ -52,15 +77,14 @@ const ChatBody = ({ messages, lastMessageRef, typingStatus, signOut, user, getUs
   );
 };
 
-
 const mapStateToProps = (state) => {
   const {
     user: { user },
-    chat:{messages}
+    chat: { messages },
   } = state;
   return {
     user,
-    messages
+    messages,
   };
 };
 
@@ -71,5 +95,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(ChatBody);
-
+export default connect(mapStateToProps, mapDispatchToProps)(ChatBody);

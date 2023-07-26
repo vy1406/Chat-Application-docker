@@ -150,6 +150,8 @@
   border-radius: 10px;
   margin-left: auto;
   font-size: 15px;
+  display: flex;
+  flex-direction: row-reverse;
 }
 .message__chats > p {
   font-size: 13px;

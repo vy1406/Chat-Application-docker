@@ -29,6 +29,7 @@ router.post("/signin", async (req, res) => {
     const user = await User.findOneAndUpdate(
       { username: req.body.username },
       { status: true },
+      {room:req.body.roomName},
       { new: true }
     );
     res.json(user);

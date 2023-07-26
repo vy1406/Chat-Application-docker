@@ -35,10 +35,10 @@ console.log('users in action :', users);
 };
 
 export const signIn = (data) => {
-  const { username, goTo } = data;
+  const { username, roomName, goTo } = data;
   return async (dispatch) => {
     try{
-      const response =  await customAxios.post("/signin", { username })
+      const response =  await customAxios.post("/signin", { username, roomName })
       await dispatch(setUser(response.data));
       //await dispatch(getUsers());
       await goTo();

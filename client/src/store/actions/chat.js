@@ -18,13 +18,15 @@ export const setMessages = (messages) => {
   
 
   export const addMessage = (data) => {
-    const { text, name, room, socketID } = data;
+    const { text, name, room, socketID, status } = data;
     return (dispatch) => {
       customAxios
-        .post("/addmessage", { text, name, room, socketID })
+        .post("/addmessage", { text, name, room, socketID, status })
         .then((response) => {
+          getMessages()
           console.log("הודעה נשמרה בהצלחה");
         })
+       
         .catch((error) => console.log("הוספת הודעה נכשלה", error));
     };
   };
