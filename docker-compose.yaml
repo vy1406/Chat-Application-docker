@@ -1,0 +1,22 @@
+version: "3.8"
+
+
+services:
+   node_app:
+    restart: on-failure
+    build:
+      context: C:\Users\User\Desktop\Chat Application\server
+      dockerfile: Dockerfile
+    container_name: node_app  
+    ports:
+      - "8080:8080"
+    
+   react-app:
+    restart: on-failure
+    build:
+      context: C:\Users\User\Desktop\Chat Application\client
+      dockerfile: Dockerfile     
+    container_name: react_app       
+    ports:
+      - "3000:3000"
+   
