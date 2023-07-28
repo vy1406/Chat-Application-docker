@@ -13,9 +13,9 @@ const ChatBar = ({ users, user, socket, setUsers, getUsers }) => {
 
   return (
     <div className="chat__sidebar">
-      <h2>Open Chat</h2>
+      <h2>צ'אט</h2>
       <div>
-        <h4 className="chat__header">ACTIVE USERS</h4>
+        <h4 className="chat__header">משתמשים מחוברים:</h4>
         <div className="chat__users">
           {users &&
             users.length > 0 &&
@@ -23,7 +23,7 @@ const ChatBar = ({ users, user, socket, setUsers, getUsers }) => {
               <p key={data.username}>
                 {" "}
                 {data.username === user.username
-                  ? `${data.username} (You)`
+                  ? `${data.username} (אתה)`
                   : data.username}{" "}
               </p>
             ))}

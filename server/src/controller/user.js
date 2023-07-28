@@ -12,8 +12,18 @@ exports.addUser = async (req, res, next) => {
     const lastName = nameFixer(req.body.lastName);
     const email = req.body.email.toLowerCase();
     const username = req.body.username.toLowerCase();
-    const newUser = await User.create({age, firstName, lastName, email, username});
-    res.status(201).json({ message: `משתמש ${newUser.username} הוסף בהצלחה` });
+    const dbNewUser = await User.create({
+      age,
+      firstName,
+      lastName,
+      email,
+      username,
+    });
+    if (!dbNewUser) {
+      const error = new Error("הוספת משתמש נכשלה");
+      throw error;
+    }
+    res.status(201).json({ message: `משתמש ${username} הוסף בהצלחה` });
   } catch (error) {
     errorHandlers.nextError(error, next);
   }
@@ -21,37 +31,60 @@ exports.addUser = async (req, res, next) => {
 
 exports.getUsers = async (req, res, next) => {
   try {
-    const users = await User.find({ status: true });
-    res.status(200).json(users);
+    const dbUsers = await User.find({ status: true });
+    res.status(200).json(dbUsers);
   } catch (error) {
-   res.status(500).json({ error: "יצירת משתמש נכשלה" });
+    errorHandlers.nextError(error, next);
   }
 };
 
 exports.signIn = async (req, res, next) => {
   try {
-    const user = await User.findOneAndUpdate(
+    const dbUser = await User.findOneAndUpdate(
       { username: req.body.username },
       { status: true, room: req.body.room },
       { new: true }
     );
-    res.status(200).json(user);
+    if (!dbUser) {
+      const error = new Error("משתמש לא קיים");
+      throw error;
+    }
+    req.user = dbUser;
+    res.status(200).json(dbUser);
   } catch (error) {
-    //errorHandlers.nextError(error, next);
-    res.status(500).json({ error: "כניסת משתמש נכשלה" });
+    errorHandlers.nextError(error, next);
   }
 };
 
 exports.signOut = async (req, res, next) => {
   try {
-    const user = await User.findOneAndUpdate(
+    const dbUser = await User.findOneAndUpdate(
       { username: req.body.username },
       { status: false },
       { new: true }
     );
+    if (!dbUser){
+      const error = new Error("משתמש לא קיים");
+      throw error;
+    }
     res.status(204).json({ message: "המשתמש נותק" });
   } catch (error) {
     errorHandlers.nextError(error, next);
   }
 };
 
+exports.deleteUser = async (req, res, next) => {
+  try {
+      const username = req.body.username.toLowerCase();
+     //TODO: Check that the user I want to delete is not currently logged in
+      const dbUser = await User.findOne({username:username});
+      if (!dbUser) {
+          const error = new Error('המשתמש לא נמצא');
+          throw error;
+      }
+      await dbUser.deleteOne();
+      res.status(200).json({ message: `המשתמש ${username} נמחק בהצלחה` });
+  } catch (error) {
+    errorHandlers.nextError(error, next);
+  }
+}

@@ -24,8 +24,8 @@ const Home = ({ signIn, socket }) => {
 
   return (
     <form className="home__container" onSubmit={handleSubmit}>
-      <h2 className="home__header">Sign in to Open Chat</h2>
-      <label htmlFor="username">Username</label>
+      <h2 className="home__header">התחבר לצ'אט</h2>
+      <label htmlFor="username">שם משתמש</label>
       <input
         type="text"
         minLength={6}
@@ -35,7 +35,7 @@ const Home = ({ signIn, socket }) => {
         value={username}
         onChange={(e) => setUserName(e.target.value)}
       />
-      <label htmlFor="room">Room Name</label>
+      <label htmlFor="room">שם החדר</label>
       <input
         type="text"
         minLength={1}
@@ -46,10 +46,10 @@ const Home = ({ signIn, socket }) => {
         onChange={(e) => setRoom(e.target.value)}
       />
       <button type="submit" className="home__cta">
-        SIGN IN
+       התחבר
       </button>
       <button onClick={handleSignUpClick} className="home__signup">
-        SIGN UP
+      הרשם
       </button>
     </form>
   );

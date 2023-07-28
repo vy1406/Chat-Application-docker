@@ -46,14 +46,14 @@ const ChatFooter = ({ socket, addMessage }) => {
       <form className="form" onSubmit={handleSendMessage}>
         <input
           type="text"
-          placeholder="Write message"
+          placeholder="כתיבת הודעה"
           className="message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleTyping}
           onMouseOut={handleEndOfTyping}
         />
-        <button className="sendBtn">SEND</button>
+        <button className="sendBtn">שלח</button>
       </form>
     </div>
   );

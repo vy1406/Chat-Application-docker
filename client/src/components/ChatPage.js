@@ -33,11 +33,12 @@ const ChatPage = ({ socket, messages, setMessages }) => {
 
   return (
     <div className="chat">
-      <ChatBar />
+     
       <div className="chat__main">
         <ChatBody typingStatus={typingStatus} lastMessageRef={lastMessageRef} />
         <ChatFooter />
       </div>
+      <ChatBar />
     </div>
   );
 };

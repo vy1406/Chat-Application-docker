@@ -3,14 +3,13 @@ const { Message, User } = require("../../models/index");
 const errorHandlers = require("../util/errors");
 
 const checkingAllUsersStatus = async (room) => {
-    const allUsersLoginAndInRoom = await User.find({
-      status: true,
-      room: room,
-    });
-    const allUsers = await User.find({});
-    const usersLoggedInStatus =
-      allUsersLoginAndInRoom.length === allUsers.length;
-    return usersLoggedInStatus;
+  const allUsersLoginAndInRoom = await User.find({
+    status: true,
+    room: room,
+  });
+  const allUsers = await User.find({});
+  const usersLoggedInStatus = allUsersLoginAndInRoom.length === allUsers.length;
+  return usersLoggedInStatus;
 };
 
 exports.addMessage = async (req, res, next) => {
@@ -19,10 +18,15 @@ exports.addMessage = async (req, res, next) => {
     errorHandlers.validErrors(errors);
     const usersLoggedInStatus = await checkingAllUsersStatus(req.body.room);
     const newMessage = new Message(req.body);
+    if (!newMessage) {
+      const error = new Error("הוספת הודעה נכשלה");
+      throw error;
+    }
     if (usersLoggedInStatus) {
       newMessage.status = true;
     }
     await newMessage.save();
+
     res.status(201).json({ message: "הודעה נוספה בהצלחה" });
   } catch (error) {
     errorHandlers.nextError(error, next);

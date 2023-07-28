@@ -30,9 +30,9 @@ const ChatBody = ({
   return (
     <>
       <header className="chat__mainHeader">
-        <p>{`Connected in room ${localStorage.getItem("room")}`}</p>
+        <p>{`מחובר לחדר : ${localStorage.getItem("room")}`}</p>
         <button className="leaveChat__btn" onClick={handleLeaveChat}>
-          LEAVE CHAT
+          יציאה
         </button>
       </header>
       <div className="message__container">
@@ -43,9 +43,8 @@ const ChatBody = ({
             .map((message) =>
               message.name === localStorage.getItem("username") ? (
                 <div className="message__chats" key={message.id}>
-                  <p className="sender__name">You</p>
                   <div className="message__sender">
-                    <p>{message.text}</p>
+                    <p className="message__content">{message.text}</p>
                     <div
                       className={
                         message.status === true
@@ -59,9 +58,9 @@ const ChatBody = ({
                 </div>
               ) : (
                 <div className="message__chats" key={message.id}>
-                  <p>{message.name}</p>
+                  <p className="sender__name">{message.name}</p>
                   <div className="message__recipient">
-                    <p>{message.text}</p>
+                    <p className="message__content">{message.text}</p>
                   </div>
                 </div>
               )

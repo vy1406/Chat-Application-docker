@@ -16,10 +16,14 @@ const SignUp = ({ addUser }) => {
     await addUser({firstName, lastName, email, username, age, goTo: () => navigate("/")})
   };
 
+  const handleBack = () => {
+    navigate("/");
+  };
+
   return (
     <form className="home__container" onSubmit={handleSubmit}>
-      <h2 className="home__header">Sign up to Open Chat</h2>
-      <label htmlFor="username">Username</label>
+      <h2 className="home__header">הרשם לצ'אט</h2>
+      <label htmlFor="username">שם משתמש</label>
       <input
         type="text"
         minLength={6}
@@ -29,7 +33,7 @@ const SignUp = ({ addUser }) => {
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
-       <label htmlFor="email">Email</label>
+       <label htmlFor="email">אימייל</label>
       <input
         type="text"
         minLength={1}
@@ -39,7 +43,7 @@ const SignUp = ({ addUser }) => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-       <label htmlFor="firstName">First Name</label>
+       <label htmlFor="firstName">שם פרטי</label>
       <input
         type="text"
         minLength={1}
@@ -49,7 +53,7 @@ const SignUp = ({ addUser }) => {
         value={firstName}
         onChange={(e) => setFirstName(e.target.value)}
       />
-       <label htmlFor="lastName">Last Name</label>
+       <label htmlFor="lastName">שם משפחה</label>
       <input
         type="text"
         minLength={1}
@@ -59,7 +63,7 @@ const SignUp = ({ addUser }) => {
         value={lastName}
         onChange={(e) => setLastName(e.target.value)}
       />
-       <label htmlFor="age">Age</label>
+       <label htmlFor="age">גיל</label>
       <input
         type="text"
         minLength={1}
@@ -69,7 +73,10 @@ const SignUp = ({ addUser }) => {
         value={age}
         onChange={(e) => setAge(e.target.value)}
       />
-      <button className="home__cta">SIGN UP</button>
+      <button type="submit" className="home__cta">הרשם</button>
+      <button  onClick={handleBack} className="home__signup">
+      חזור
+      </button>
     </form>
   );
 };

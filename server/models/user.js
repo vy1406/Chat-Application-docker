@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     lastName: { type: String, required: true, unique: false },
     age: { type: Number, required: false },
     status: { type: Boolean, required: false, default: false },
-    room: { type: String, required: true },
+    room: { type: String, default: '' },
   },
   {
     toJSON: {
