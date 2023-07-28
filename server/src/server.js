@@ -85,7 +85,7 @@ socketIO.on("connection", (socket) => {
 
 mongoose
   .connect("mongodb://localhost:27017/chat", { // local
-  //  .connect("mongodb://host.docker.internal:27017/chat", {   // docker
+   // .connect("mongodb://host.docker.internal:27017/chat", {   // docker
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

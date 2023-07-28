@@ -6,6 +6,7 @@ import { addMessage } from "../store/actions/index";
 
 const ChatFooter = ({ socket, addMessage }) => {
   const [message, setMessage] = useState("");
+  const [errors, setErrors] = useState({});
 
   const handleTyping = () =>
     socket.emit("typing", `${localStorage.getItem("username")} is typing`);
@@ -21,6 +22,14 @@ const ChatFooter = ({ socket, addMessage }) => {
    // toast.success('הודעה נשלחה בהצלחה!', {
      // position: toast.POSITION.TOP_RIGHT,
     //});
+    const validationErrors = {};
+    if (message.length < 1 || message.length > 280) {
+      validationErrors.message = "הודעה צריכה להכיל 1-280 תווים בלבד";
+    }
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
     if (message.trim() && localStorage.getItem("username")) {
       socket.emit("message", {
         text: message,
@@ -49,10 +58,11 @@ const ChatFooter = ({ socket, addMessage }) => {
           placeholder="כתיבת הודעה"
           className="message"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => {setMessage(e.target.value); setErrors('')}}
           onKeyDown={handleTyping}
           onMouseOut={handleEndOfTyping}
         />
+        {errors.message && <p className="error">{errors.message}</p>}
         <button className="sendBtn">שלח</button>
       </form>
     </div>

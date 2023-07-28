@@ -9,6 +9,7 @@ export const addUser = (data) => {
       .post("/adduser", { firstName, lastName, email, username, age })
       .then((response) => {
         console.log("משתמש הוסף בהצלחה");
+        dispatch(showAlert('משתמש הוסף בהצלחה ', 'success'));
       })
       .then(() => goTo())
       .catch((error) =>dispatch(showAlert(`הוספת משתמש נכשלה : ${error}`, 'error')));
@@ -41,7 +42,7 @@ export const signIn = (data) => {
       await dispatch(setUser(response.data));
       await goTo();
     } catch (error) {
-      dispatch(showAlert(`כניסת משתמש נכשלה : ${error}`, 'error'))
+      dispatch(showAlert(`כניסת משתמש נכשלה, נא לוודא כי הינך רשום, תודה:. ${error}`, 'error'))
     }
   };
 };

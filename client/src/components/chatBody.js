@@ -30,7 +30,14 @@ const ChatBody = ({
   return (
     <>
       <header className="chat__mainHeader">
-        <p>{`מחובר לחדר : ${localStorage.getItem("room")}`}</p>
+    
+
+        <p>
+        <span style={{ color: "black", fontWeight:"bold" }}>מחובר לחדר: </span>
+        <span style={{color:"#607eaa", fontSize:"16px", fontWeight:"bold"}} >{` "${localStorage.getItem("room")}"`}</span>
+      </p>
+
+
         <button className="leaveChat__btn" onClick={handleLeaveChat}>
           יציאה
         </button>
