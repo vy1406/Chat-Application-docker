@@ -29,8 +29,8 @@
   padding: 10px;
   font-size: 16px;
   cursor: pointer;
-  background-color: gray;
- 
+  background-color: #607eaa;
+ color:white;
   outline: none;
   border: none;
   border-radius: 5px;
@@ -39,8 +39,8 @@
   width: 100px;
   font-size: 16px;
   cursor: pointer;
-  background-color: gray;
- 
+  background-color: black;
+  color:white;
   outline: none;
   border: none;
   border-radius: 5px;
