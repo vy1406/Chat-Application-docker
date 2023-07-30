@@ -3,6 +3,8 @@ version: "3.8"
 
 services:
    node_app:
+    env_file:
+      - C:\Users\User\Desktop\Chat Application\server\.env
     restart: on-failure
     build:
       context: C:\Users\User\Desktop\Chat Application\server

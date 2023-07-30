@@ -5,6 +5,8 @@ const User = require("../models/user");
 const Message = require("../models/message");
 const { userRoutes, chatRoutes } = require("./api/index");
 
+require("dotenv").config({ path: ".env" });
+
 const app = express();
 const PORT = 8080;
 
@@ -81,16 +83,25 @@ socketIO.on("connection", (socket) => {
     socket.disconnect();
   });
 });
-
-
+let dbConnection = "";
+if (process.env.DOCKER_COMPOSE && process.env.DOCKER_COMPOSE === "yes") {
+  dbConnection = "mongodb://host.docker.internal:27017/chat";
+} else {
+  dbConnection = "mongodb://localhost:27017/chat";
+}
 mongoose
-  .connect("mongodb://localhost:27017/chat", { // local
-   // .connect("mongodb://host.docker.internal:27017/chat", {   // docker
+  .connect(dbConnection, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("Connected to MongoDB");
+    console.log(
+      `Connected to MongoDB ${
+        process.env.DOCKER_COMPOSE && process.env.DOCKER_COMPOSE === "yes"
+          ? "in a Docker environment"
+          : "in a local environment"
+      }`
+    );
     http.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
