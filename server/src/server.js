@@ -1,34 +1,12 @@
-const express = require("express");
-const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const User = require("../models/user");
 const Message = require("../models/message");
-const { userRoutes, chatRoutes } = require("./api/index");
-
+const app = require("./app");
 require("dotenv").config({ path: ".env" });
 
-const app = express();
 const PORT = 8080;
 
-// Middleware setup
-app.use(bodyParser.json());
-
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  next();
-});
-
-app.use(userRoutes);
-app.use(chatRoutes);
-
 const http = require("http").Server(app);
-const cors = require("cors");
-
-app.use(cors());
 
 const socketIO = require("socket.io")(http, {
   cors: {
@@ -83,6 +61,7 @@ socketIO.on("connection", (socket) => {
     socket.disconnect();
   });
 });
+
 let dbConnection = "";
 if (process.env.DOCKER_COMPOSE && process.env.DOCKER_COMPOSE === "yes") {
   dbConnection = "mongodb://host.docker.internal:27017/chat";
